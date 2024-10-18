@@ -8,7 +8,10 @@ from datetime import datetime, timedelta
 ALGORITHM = "HS256" #tipo de algoritnmo de encriptacion
 ACCESS_TOKEN_DURATION = 1 #la duracion del token de acceso
 SECRET = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7" #palabra secreta para encriptar
-router = APIRouter()
+
+router = APIRouter(prefix="/jwtauth",
+                   tags=["jwtauth"],
+                   responses={status.HTTP_404_NOT_FOUND: {"message": "No encontrado"}})
 
 oauth2 = OAuth2PasswordBearer(tokenUrl="login")
 #variable en la que indicamos la url que se encarga de gestionar
@@ -35,14 +38,14 @@ Usuarios_db = {
         "nombre_completo": "angel alferez",
         "email": "angel@email.com",
         "activo": False,
-        "password": "$2a$12$mFhLceDeJ74x0L7/apa/7.y5aUNx.PSwIP8zgl72roGzOqoAa7IHW"
+        "password": "$2a$12$mFhLceDeJ74x0L7/apa/7.y5aUNx.PSwIP8zgl72roGzOqoAa7IHW" #la contraseña normal es 123456. esta es la encriptada
     },
     "angel2": {
         "username": "angel2",
         "nombre_completo": "angel alferez2",
         "email": "angel2@email.com",
         "activo": True,
-        "password": "$2a$12$Wve3enRzMd0KOvklp46cRu7c8SHDIECMXwYDYOxIpNlrbhV0TlgMK"
+        "password": "$2a$12$Wve3enRzMd0KOvklp46cRu7c8SHDIECMXwYDYOxIpNlrbhV0TlgMK" #la contraseña normal es 987654. esta es la encriptada
     }
 }
 
@@ -97,9 +100,9 @@ async def login(form: OAuth2PasswordRequestForm = Depends()):
                             detail="contraseña incorrecta")
     
     #el timedelta define lo que indicamos entre parentesis
-    #token de acceso: le pasamos el propio username(sub) y el tiempo a expirar. seria ahora mas la variable que le dimos
+    #token de acceso: le pasamos el propio username(sub) y el tiempo a expirar. seria ahora mas la variable que le dimos..
     access_token = { "sub": usuario.username,
-                    "exp": datetime.now() + timedelta(minutes=ACCESS_TOKEN_DURATION)}               
+                    "exp": datetime.now() + timedelta(hours=ACCESS_TOKEN_DURATION)}               
 
     return {"access_token": jwt.encode(access_token, SECRET, algorithm=ALGORITHM) , "token_type": "bearer"}
     #codificamos el token. el propio token , la palabra secreta, y el algoritmo. todo con el tipo de token bearer
