@@ -37,7 +37,7 @@ async def root():
 
 @app.get("/url")
 async def url():
-    return {"url": "https://mouredev.com/python"}
+    return {"la url de prueba": "https://mouredev.com/python"}
 
 # Inicia el server: uvicorn main:app --reload
 # Detener el server: CTRL+C
